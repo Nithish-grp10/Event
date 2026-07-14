@@ -41,6 +41,10 @@ class ApplicationPolicy
      */
     public function update(User $user, Application $application): bool
     {
+        $event = $application->event;
+        if ($user->hasRole('super-admin')) return true;
+        if ($user->hasRole('admin')) return $event->created_by === $user->id;
+        if ($user->hasRole('staff')) return $event->staff()->where('user_id', $user->id)->exists();
         return false;
     }
 
@@ -49,7 +53,9 @@ class ApplicationPolicy
      */
     public function delete(User $user, Application $application): bool
     {
-        return false;
+        $event = $application->event;
+        if ($user->hasRole('super-admin')) return true;
+        return $user->hasRole('admin') && $event->created_by === $user->id;
     }
 
     /**

@@ -3,7 +3,7 @@
 namespace App\Modules\LegacyForms\Models;
 
 use Illuminate\Database\Eloquent\Model;
-
+use App\Modules\Events\Models\Event;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Form extends Model

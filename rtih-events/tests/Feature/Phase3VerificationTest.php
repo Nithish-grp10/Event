@@ -2,11 +2,11 @@
 
 namespace Tests\Feature;
 
-use App\Models\Event;
-use App\Models\Form;
-use App\Models\FormField;
+use App\Modules\Events\Models\Event;
+use App\Modules\LegacyForms\Models\Form;
+use App\Modules\LegacyForms\Models\FormField;
 use App\Modules\Users\Models\User;
-use App\Models\Application;
+use App\Modules\Applications\Models\Application;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Str;
 use Tests\TestCase;

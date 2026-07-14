@@ -4,7 +4,8 @@ namespace App\Modules\Applications\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use App\Modules\Events\Models\Event;
-
+use App\Modules\LegacyForms\Models\Form;
+use App\Modules\Events\Models\Attendance;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Application extends Model

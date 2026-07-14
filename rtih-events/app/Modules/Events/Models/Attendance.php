@@ -3,6 +3,8 @@
 namespace App\Modules\Events\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Modules\Applications\Models\Application;
+use App\Modules\Users\Models\User;
 
 class Attendance extends Model
 {
