@@ -3,70 +3,88 @@
         Feedback Responses
     </x-slot>
 
-    <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
-        <div class="p-4 border-b border-gray-200 bg-gray-50 flex justify-between items-center">
-            <h2 class="text-lg font-semibold text-gray-900">All Feedback</h2>
-        </div>
-        
-        @if($feedbacks->count() > 0)
-            <div class="overflow-x-auto">
-                <table class="w-full text-left border-collapse">
-                    <thead>
-                        <tr class="bg-gray-50 border-b border-gray-200 text-sm text-gray-500 uppercase tracking-wider">
-                            <th class="p-4 font-semibold">Event</th>
-                            <th class="p-4 font-semibold">Overall</th>
-                            <th class="p-4 font-semibold">Speaker</th>
-                            <th class="p-4 font-semibold">Venue</th>
-                            <th class="p-4 font-semibold">Content</th>
-                            <th class="p-4 font-semibold">Submitted</th>
-                            <th class="p-4 font-semibold text-right">Details</th>
-                        </tr>
-                    </thead>
-                    <tbody class="divide-y divide-gray-200">
-                        @foreach($feedbacks as $feedback)
-                        <tr class="hover:bg-gray-50 transition-colors" x-data="{ open: false }">
-                            <td class="p-4 font-medium text-gray-900">{{ $feedback->event->title ?? 'Unknown' }}</td>
-                            <td class="p-4"><span class="px-2 py-1 bg-indigo-100 text-indigo-800 rounded font-bold">{{ $feedback->overall_rating }}/5</span></td>
-                            <td class="p-4 text-gray-600">{{ $feedback->speaker_rating ?: '-' }}</td>
-                            <td class="p-4 text-gray-600">{{ $feedback->venue_rating ?: '-' }}</td>
-                            <td class="p-4 text-gray-600">{{ $feedback->content_rating ?: '-' }}</td>
-                            <td class="p-4 text-gray-500 text-sm">{{ $feedback->created_at->format('M d, Y') }}</td>
-                            <td class="p-4 text-right">
-                                <button @click="open = !open" class="text-indigo-600 hover:text-indigo-900 text-sm font-medium">View Comments</button>
-                            </td>
-                        </tr>
-                        <!-- Expanded details row (alpine) -->
-                        <tr x-show="open" x-cloak class="bg-gray-50 border-b border-gray-200">
-                            <td colspan="7" class="p-4">
-                                <div class="grid grid-cols-2 gap-4 text-sm">
-                                    <div>
-                                        <h4 class="font-semibold text-gray-700">What they liked:</h4>
-                                        <p class="text-gray-600 mt-1 whitespace-pre-wrap">{{ $feedback->comments ?: 'No comments provided.' }}</p>
-                                    </div>
-                                    <div>
-                                        <h4 class="font-semibold text-gray-700">Suggestions:</h4>
-                                        <p class="text-gray-600 mt-1 whitespace-pre-wrap">{{ $feedback->suggestions ?: 'No suggestions provided.' }}</p>
-                                    </div>
+    @if($feedbacks->count() > 0)
+        <x-ui.data-table search="false">
+            <x-slot name="head">
+                <th scope="col" class="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Event</th>
+                <th scope="col" class="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Ratings</th>
+                <th scope="col" class="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Submitted</th>
+                <th scope="col" class="px-6 py-3 text-right text-xs font-semibold text-gray-500 uppercase tracking-wider">Details</th>
+            </x-slot>
+
+            @foreach($feedbacks as $feedback)
+                <tbody x-data="{ open: false }" class="border-b border-gray-200 hover:bg-gray-50/50 transition-colors last:border-0">
+                    <tr>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <div class="text-sm font-semibold text-gray-900">{{ $feedback->event->title ?? 'Unknown' }}</div>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <div class="flex items-center gap-4 text-sm">
+                                <div>
+                                    <span class="text-xs text-gray-500 block">Overall</span>
+                                    <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-bold bg-indigo-50 text-indigo-700 border border-indigo-100">{{ $feedback->overall_rating }}/5</span>
                                 </div>
-                            </td>
-                        </tr>
-                        @endforeach
-                    </tbody>
-                </table>
-            </div>
+                                <div>
+                                    <span class="text-xs text-gray-500 block">Speaker</span>
+                                    <span class="font-medium text-gray-700">{{ $feedback->speaker_rating ?: '-' }}</span>
+                                </div>
+                                <div>
+                                    <span class="text-xs text-gray-500 block">Venue</span>
+                                    <span class="font-medium text-gray-700">{{ $feedback->venue_rating ?: '-' }}</span>
+                                </div>
+                                <div>
+                                    <span class="text-xs text-gray-500 block">Content</span>
+                                    <span class="font-medium text-gray-700">{{ $feedback->content_rating ?: '-' }}</span>
+                                </div>
+                            </div>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <div class="text-sm text-gray-900">{{ $feedback->created_at->format('M d, Y') }}</div>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                            <x-ui.button type="button" @click="open = !open" variant="secondary" size="sm">
+                                <span x-show="!open" class="flex items-center"><x-heroicon-o-chevron-down class="w-4 h-4 mr-1 text-gray-400"/> View</span>
+                                <span x-show="open" class="flex items-center"><x-heroicon-o-chevron-up class="w-4 h-4 mr-1 text-gray-400"/> Hide</span>
+                            </x-ui.button>
+                        </td>
+                    </tr>
+                    
+                    <!-- Expanded details row -->
+                    <tr x-show="open" x-cloak x-transition class="bg-gray-50/80 border-t border-gray-100">
+                        <td colspan="4" class="px-6 py-6">
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div class="bg-white p-4 rounded-xl border border-gray-200 shadow-sm">
+                                    <h4 class="text-xs font-bold text-gray-500 uppercase tracking-wider mb-2 flex items-center">
+                                        <x-heroicon-o-hand-thumb-up class="w-4 h-4 mr-1.5 text-emerald-500"/> What they liked
+                                    </h4>
+                                    <p class="text-sm text-gray-700 whitespace-pre-wrap leading-relaxed">{{ $feedback->comments ?: 'No comments provided.' }}</p>
+                                </div>
+                                <div class="bg-white p-4 rounded-xl border border-gray-200 shadow-sm">
+                                    <h4 class="text-xs font-bold text-gray-500 uppercase tracking-wider mb-2 flex items-center">
+                                        <x-heroicon-o-light-bulb class="w-4 h-4 mr-1.5 text-amber-500"/> Suggestions
+                                    </h4>
+                                    <p class="text-sm text-gray-700 whitespace-pre-wrap leading-relaxed">{{ $feedback->suggestions ?: 'No suggestions provided.' }}</p>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            @endforeach
+
             @if($feedbacks->hasPages())
-                <div class="p-4 border-t border-gray-200 bg-gray-50">
+                <x-slot name="pagination">
                     {{ $feedbacks->links() }}
-                </div>
+                </x-slot>
             @endif
-        @else
-            <div class="p-12 text-center">
-                <div class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-gray-100 mb-4 text-gray-400">
-                    <x-heroicon-o-chat-bubble-left-ellipsis class="w-8 h-8"/>
-                </div>
-                <h3 class="text-lg font-medium text-gray-900 mb-1">No feedback yet</h3>
-                <p class="text-gray-500 max-w-sm mx-auto">Feedback submitted by attendees will appear here.</p>
+        </x-ui.data-table>
+    @else
+        <!-- Empty State -->
+        <x-ui.card class="flex flex-col items-center justify-center p-16 text-center">
+            <div class="w-16 h-16 bg-indigo-50 text-indigo-600 rounded-2xl flex items-center justify-center mb-4 shadow-sm border border-indigo-100">
+                <x-heroicon-o-chat-bubble-left-ellipsis class="w-8 h-8"/>
             </div>
-        @endif
-    </div>
+            <h3 class="text-lg font-bold text-gray-900 mb-2">No feedback received</h3>
+            <p class="text-gray-500 mb-6 max-w-sm mx-auto text-sm">Feedback submitted by attendees for your events will appear here.</p>
+        </x-ui.card>
+    @endif
 </x-app-layout>

@@ -34,6 +34,8 @@ Route::middleware(['auth'])->group(function () {
     Route::resource('applications', App\Modules\Applications\Controllers\ApplicationController::class)->only(['index', 'show', 'destroy']);
     Route::post('applications/bulk', [App\Modules\Applications\Controllers\ApplicationController::class, 'bulkAction'])->name('applications.bulk');
     Route::post('applications/{application}/status/{status}', [App\Modules\Applications\Controllers\ApplicationController::class, 'updateStatus'])->name('applications.status');
+    Route::post('applications/{application}/assign', [App\Modules\Applications\Controllers\ApplicationController::class, 'assign'])->name('applications.assign');
+    Route::post('applications/{application}/notes', [App\Modules\Applications\Controllers\ApplicationController::class, 'notes'])->name('applications.notes');
 
     Route::get('events/{event}/attendance/scan', [App\Modules\Events\Controllers\Web\AttendanceController::class, 'scan'])->name('events.attendance.scan');
     Route::post('events/{event}/attendance/scan', [App\Modules\Events\Controllers\Web\AttendanceController::class, 'store'])->name('events.attendance.store');

@@ -1,105 +1,104 @@
 <x-app-layout>
     <x-slot name="header">
-        Dashboard
+        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+            {{ __('Dashboard') }}
+        </h2>
     </x-slot>
 
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6 mb-8">
-        <!-- Stat Card 1 -->
-        <div class="bg-white rounded-xl shadow-sm p-6 border border-gray-100 flex items-center gap-4">
-            <div class="p-3 bg-indigo-50 text-indigo-600 rounded-lg">
-                <x-heroicon-o-calendar class="w-8 h-8"/>
-            </div>
-            <div>
-                <p class="text-sm font-medium text-gray-500">Total Events</p>
-                <p class="text-2xl font-bold text-gray-900">{{ $stats['total_events'] }}</p>
-            </div>
-        </div>
+        <x-ui.widgets.stat-card 
+            title="Total Events" 
+            :value="$stats['total_events']" 
+            color="indigo"
+        >
+            <x-slot name="icon">
+                <x-heroicon-o-calendar class="w-6 h-6"/>
+            </x-slot>
+        </x-ui.widgets.stat-card>
 
-        <!-- Stat Card 2 -->
-        <div class="bg-white rounded-xl shadow-sm p-6 border border-gray-100 flex items-center gap-4">
-            <div class="p-3 bg-blue-50 text-blue-600 rounded-lg">
-                <x-heroicon-o-inbox-arrow-down class="w-8 h-8"/>
-            </div>
-            <div>
-                <p class="text-sm font-medium text-gray-500">Total Applications</p>
-                <p class="text-2xl font-bold text-gray-900">{{ $stats['total_applications'] }}</p>
-            </div>
-        </div>
+        <x-ui.widgets.stat-card 
+            title="Total Applications" 
+            :value="$stats['total_applications']" 
+            color="blue"
+        >
+            <x-slot name="icon">
+                <x-heroicon-o-inbox-arrow-down class="w-6 h-6"/>
+            </x-slot>
+        </x-ui.widgets.stat-card>
 
-        <!-- Stat Card 3 -->
-        <div class="bg-white rounded-xl shadow-sm p-6 border border-gray-100 flex items-center gap-4">
-            <div class="p-3 bg-green-50 text-green-600 rounded-lg">
-                <x-heroicon-o-check-circle class="w-8 h-8"/>
-            </div>
-            <div>
-                <p class="text-sm font-medium text-gray-500">Approved Applications</p>
-                <p class="text-2xl font-bold text-gray-900">{{ $stats['approved_applications'] }}</p>
-            </div>
-        </div>
+        <x-ui.widgets.stat-card 
+            title="Approved Applications" 
+            :value="$stats['approved_applications']" 
+            color="emerald"
+        >
+            <x-slot name="icon">
+                <x-heroicon-o-check-circle class="w-6 h-6"/>
+            </x-slot>
+        </x-ui.widgets.stat-card>
 
-        <!-- Stat Card 4 -->
-        <div class="bg-white rounded-xl shadow-sm p-6 border border-gray-100 flex items-center gap-4">
-            <div class="p-3 bg-red-50 text-red-600 rounded-lg">
-                <x-heroicon-o-x-circle class="w-8 h-8"/>
-            </div>
-            <div>
-                <p class="text-sm font-medium text-gray-500">Rejected Applications</p>
-                <p class="text-2xl font-bold text-gray-900">{{ $stats['rejected_applications'] }}</p>
-            </div>
-        </div>
+        <x-ui.widgets.stat-card 
+            title="Rejected Applications" 
+            :value="$stats['rejected_applications']" 
+            color="red"
+        >
+            <x-slot name="icon">
+                <x-heroicon-o-x-circle class="w-6 h-6"/>
+            </x-slot>
+        </x-ui.widgets.stat-card>
 
-        <!-- Stat Card 5 -->
-        <div class="bg-white rounded-xl shadow-sm p-6 border border-gray-100 flex items-center gap-4">
-            <div class="p-3 bg-purple-50 text-purple-600 rounded-lg">
-                <x-heroicon-o-clipboard-document-list class="w-8 h-8"/>
-            </div>
-            <div>
-                <p class="text-sm font-medium text-gray-500">Total Forms</p>
-                <p class="text-2xl font-bold text-gray-900">{{ $stats['total_forms'] }}</p>
-            </div>
-        </div>
+        <x-ui.widgets.stat-card 
+            title="Total Forms" 
+            :value="$stats['total_forms']" 
+            color="purple"
+        >
+            <x-slot name="icon">
+                <x-heroicon-o-clipboard-document-list class="w-6 h-6"/>
+            </x-slot>
+        </x-ui.widgets.stat-card>
     </div>
 
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <!-- Chart -->
-        <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden lg:col-span-2">
-            <div class="p-6 border-b border-gray-100 flex justify-between items-center">
-                <h3 class="text-lg font-semibold text-gray-800">Applications Overview</h3>
-            </div>
-            <div class="p-6" style="height: 400px;">
+        <x-ui.card class="lg:col-span-2">
+            <x-slot name="header">
+                <h3 class="text-lg font-semibold text-gray-900">Applications Overview</h3>
+            </x-slot>
+            <div style="height: 400px;" class="-mx-2">
                 <canvas id="applicationsChart"></canvas>
             </div>
-        </div>
+        </x-ui.card>
 
         <!-- Welcome Panel -->
-        <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
-            <div class="p-6 border-b border-gray-100">
-                <h3 class="text-lg font-semibold text-gray-800">Welcome, {{ auth()->user()->name }}</h3>
+        <x-ui.card>
+            <x-slot name="header">
+                <h3 class="text-lg font-semibold text-gray-900">Welcome, {{ auth()->user()->name }}</h3>
+            </x-slot>
+            
+            <p class="text-gray-600 mb-6">You're logged in as <strong class="text-gray-900">{{ ucfirst(auth()->user()->roles->first()->name ?? 'User') }}</strong>.</p>
+            
+            <h4 class="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-3">Quick Actions</h4>
+            <div class="space-y-3">
+                @if(auth()->user()->hasRole('super-admin') || auth()->user()->hasRole('admin'))
+                <x-ui.button href="{{ route('events.create') }}" variant="secondary" class="w-full justify-start border-gray-200">
+                    <x-heroicon-o-plus class="w-4 h-4 mr-2 text-indigo-500"/>
+                    Create New Event
+                </x-ui.button>
+                <x-ui.button href="{{ route('forms.create') }}" variant="secondary" class="w-full justify-start border-gray-200">
+                    <x-heroicon-o-plus class="w-4 h-4 mr-2 text-indigo-500"/>
+                    Build New Form
+                </x-ui.button>
+                @endif
+                <x-ui.button href="{{ route('applications.index') }}" variant="primary" class="w-full justify-start">
+                    <x-heroicon-o-clipboard-document-check class="w-4 h-4 mr-2 opacity-75"/>
+                    Review Applications
+                </x-ui.button>
             </div>
-            <div class="p-6">
-                <p class="text-gray-600 mb-4">You're logged in as <strong>{{ ucfirst(auth()->user()->roles->first()->name ?? 'User') }}</strong>.</p>
-                
-                <h4 class="font-medium text-gray-900 mt-6 mb-2">Quick Actions</h4>
-                <div class="space-y-2">
-                    @if(auth()->user()->hasRole('super-admin') || auth()->user()->hasRole('admin'))
-                    <a href="{{ route('events.create') }}" class="block px-4 py-2 bg-indigo-50 text-indigo-700 rounded-lg text-sm font-medium hover:bg-indigo-100 transition-colors">
-                        + Create New Event
-                    </a>
-                    <a href="{{ route('forms.create') }}" class="block px-4 py-2 bg-indigo-50 text-indigo-700 rounded-lg text-sm font-medium hover:bg-indigo-100 transition-colors">
-                        + Build New Form
-                    </a>
-                    @endif
-                    <a href="{{ route('applications.index') }}" class="block px-4 py-2 bg-indigo-50 text-indigo-700 rounded-lg text-sm font-medium hover:bg-indigo-100 transition-colors">
-                        Review Applications
-                    </a>
-                </div>
-            </div>
-        </div>
+        </x-ui.card>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('alpine:init', () => {
             const ctx = document.getElementById('applicationsChart').getContext('2d');
             const data = @json($chartData);
             
@@ -110,10 +109,10 @@
                     datasets: [{
                         label: 'Applications Received',
                         data: data.data,
-                        backgroundColor: 'rgba(79, 70, 229, 0.8)', // indigo-600
-                        borderColor: 'rgba(79, 70, 229, 1)',
-                        borderWidth: 1,
-                        borderRadius: 4
+                        backgroundColor: '#4f46e5',
+                        borderRadius: 6,
+                        borderSkipped: false,
+                        barPercentage: 0.6
                     }]
                 },
                 options: {
@@ -122,11 +121,29 @@
                     scales: {
                         y: {
                             beginAtZero: true,
-                            ticks: { precision: 0 }
+                            grid: {
+                                color: '#f3f4f6',
+                                drawBorder: false,
+                            },
+                            ticks: { precision: 0, color: '#6b7280' }
+                        },
+                        x: {
+                            grid: {
+                                display: false,
+                                drawBorder: false,
+                            },
+                            ticks: { color: '#6b7280' }
                         }
                     },
                     plugins: {
-                        legend: { display: false }
+                        legend: { display: false },
+                        tooltip: {
+                            backgroundColor: '#111827',
+                            padding: 12,
+                            titleFont: { family: 'Plus Jakarta Sans', size: 13 },
+                            bodyFont: { family: 'Plus Jakarta Sans', size: 13 },
+                            cornerRadius: 8,
+                        }
                     }
                 }
             });

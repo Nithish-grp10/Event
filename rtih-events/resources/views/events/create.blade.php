@@ -3,150 +3,126 @@
         Create Event
     </x-slot>
 
-    <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden max-w-4xl">
-        <form method="POST" action="{{ route('events.store') }}" enctype="multipart/form-data" class="p-6 space-y-6">
-            @csrf
+    <div class="max-w-4xl mx-auto">
+        <x-ui.card>
+            <x-slot name="header">
+                <h3 class="text-lg font-semibold text-gray-900">Event Details</h3>
+            </x-slot>
 
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <x-ui.form method="POST" action="{{ route('events.store') }}" enctype="multipart/form-data" class="space-y-8">
+                
                 <!-- Basic Info -->
-                <div class="md:col-span-2">
-                    <x-input-label for="title" value="Event Title" />
-                    <x-text-input id="title" name="title" type="text" class="mt-1 block w-full" :value="old('title')" required autofocus />
-                    <x-input-error class="mt-2" :messages="$errors->get('title')" />
-                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="md:col-span-2">
+                        <x-ui.input id="title" name="title" :value="old('title')" required autofocus label="Event Title" />
+                    </div>
 
-                <div class="md:col-span-2">
-                    <x-input-label for="description" value="Description" />
-                    <textarea id="description" name="description" rows="4" class="mt-1 block w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm">{{ old('description') }}</textarea>
-                    <x-input-error class="mt-2" :messages="$errors->get('description')" />
-                </div>
+                    <div class="md:col-span-2">
+                        <label for="description" class="block text-sm font-semibold text-gray-700 mb-1.5">Description</label>
+                        <textarea id="description" name="description" rows="4" class="block w-full rounded-lg border border-gray-200/80 shadow-[0_1px_2px_rgba(0,0,0,0.02)] focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 sm:text-sm transition-all bg-white hover:border-gray-300">{{ old('description') }}</textarea>
+                        @error('description')
+                            <p class="mt-1.5 text-sm text-red-600 font-medium">{{ $message }}</p>
+                        @enderror
+                    </div>
 
-                <div>
-                    <x-input-label for="category" value="Category" />
-                    <x-text-input id="category" name="category" type="text" class="mt-1 block w-full" :value="old('category')" />
-                    <x-input-error class="mt-2" :messages="$errors->get('category')" />
-                </div>
+                    <div>
+                        <x-ui.input id="category" name="category" :value="old('category')" label="Category" />
+                    </div>
 
-                <div>
-                    <x-input-label for="location" value="Venue / Location" />
-                    <x-text-input id="location" name="location" type="text" class="mt-1 block w-full" :value="old('location')" />
-                    <x-input-error class="mt-2" :messages="$errors->get('location')" />
+                    <div>
+                        <x-ui.input id="location" name="location" :value="old('location')" label="Venue / Location" />
+                    </div>
                 </div>
 
                 <!-- Timings -->
-                <div>
-                    <x-input-label for="start_date" value="Start Date" />
-                    <x-text-input id="start_date" name="start_date" type="date" class="mt-1 block w-full" :value="old('start_date')" required />
-                    <x-input-error class="mt-2" :messages="$errors->get('start_date')" />
+                <div class="border-t border-gray-100 pt-6">
+                    <h4 class="text-sm font-semibold text-gray-900 mb-4 uppercase tracking-wider">Timings & Registration</h4>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <x-ui.input type="date" id="start_date" name="start_date" :value="old('start_date')" required label="Start Date" />
+                        </div>
+                        <div>
+                            <x-ui.input type="date" id="end_date" name="end_date" :value="old('end_date')" label="End Date" />
+                        </div>
+                        <div>
+                            <x-ui.input type="time" id="start_time" name="start_time" :value="old('start_time')" label="Start Time" />
+                        </div>
+                        <div>
+                            <x-ui.input type="time" id="end_time" name="end_time" :value="old('end_time')" label="End Time" />
+                        </div>
+                        
+                        <div class="md:col-span-2 grid grid-cols-1 md:grid-cols-3 gap-6">
+                            <div>
+                                <x-ui.input type="date" id="registration_start" name="registration_start" :value="old('registration_start')" label="Registration Start" />
+                            </div>
+                            <div>
+                                <x-ui.input type="date" id="registration_end" name="registration_end" :value="old('registration_end')" label="Registration End" />
+                            </div>
+                            <div>
+                                <x-ui.input type="number" id="max_seats" name="max_seats" min="1" :value="old('max_seats')" label="Max Seats" hint="Leave blank for unlimited" />
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
-                <div>
-                    <x-input-label for="end_date" value="End Date" />
-                    <x-text-input id="end_date" name="end_date" type="date" class="mt-1 block w-full" :value="old('end_date')" />
-                    <x-input-error class="mt-2" :messages="$errors->get('end_date')" />
-                </div>
-
-                <div>
-                    <x-input-label for="start_time" value="Start Time" />
-                    <x-text-input id="start_time" name="start_time" type="time" class="mt-1 block w-full" :value="old('start_time')" />
-                    <x-input-error class="mt-2" :messages="$errors->get('start_time')" />
-                </div>
-
-                <div>
-                    <x-input-label for="end_time" value="End Time" />
-                    <x-text-input id="end_time" name="end_time" type="time" class="mt-1 block w-full" :value="old('end_time')" />
-                    <x-input-error class="mt-2" :messages="$errors->get('end_time')" />
-                </div>
-
-                <!-- Registration -->
-                <div>
-                    <x-input-label for="registration_start" value="Registration Start Date" />
-                    <x-text-input id="registration_start" name="registration_start" type="date" class="mt-1 block w-full" :value="old('registration_start')" />
-                    <x-input-error class="mt-2" :messages="$errors->get('registration_start')" />
-                </div>
-
-                <div>
-                    <x-input-label for="registration_end" value="Registration End Date" />
-                    <x-text-input id="registration_end" name="registration_end" type="date" class="mt-1 block w-full" :value="old('registration_end')" />
-                    <x-input-error class="mt-2" :messages="$errors->get('registration_end')" />
-                </div>
-
-                <div>
-                    <x-input-label for="max_seats" value="Maximum Seats (Leave blank for unlimited)" />
-                    <x-text-input id="max_seats" name="max_seats" type="number" min="1" class="mt-1 block w-full" :value="old('max_seats')" />
-                    <x-input-error class="mt-2" :messages="$errors->get('max_seats')" />
-                </div>
-
-                <div></div> <!-- spacing filler -->
-
-                <!-- Assign Admin -->
                 @if(auth()->user()->hasRole('super-admin'))
-                <div class="md:col-span-2 border-t pt-4 border-gray-200 mt-2">
-                    <h3 class="text-lg font-medium text-gray-900 mb-4">Event Assignment</h3>
-                </div>
-
-                <div>
-                    <x-input-label for="assigned_admin_id" value="Assign to Admin/Staff" />
-                    <select id="assigned_admin_id" name="assigned_admin_id" class="mt-1 block w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm">
-                        <option value="">Unassigned (Super Admin Only)</option>
-                        @foreach($admins as $admin)
-                            <option value="{{ $admin->id }}" {{ old('assigned_admin_id') == $admin->id ? 'selected' : '' }}>
-                                {{ $admin->name }} ({{ $admin->email }})
-                            </option>
-                        @endforeach
-                    </select>
-                    <x-input-error class="mt-2" :messages="$errors->get('assigned_admin_id')" />
+                <!-- Event Assignment -->
+                <div class="border-t border-gray-100 pt-6">
+                    <h4 class="text-sm font-semibold text-gray-900 mb-4 uppercase tracking-wider">Administration</h4>
+                    <div class="md:col-span-2 max-w-md">
+                        <label for="assigned_admin_id" class="block text-sm font-semibold text-gray-700 mb-1.5">Assign to Admin/Staff</label>
+                        <select id="assigned_admin_id" name="assigned_admin_id" class="block w-full rounded-lg border border-gray-200/80 shadow-[0_1px_2px_rgba(0,0,0,0.02)] focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 sm:text-sm transition-all bg-white hover:border-gray-300">
+                            <option value="">Unassigned (Super Admin Only)</option>
+                            @foreach($admins as $admin)
+                                <option value="{{ $admin->id }}" {{ old('assigned_admin_id') == $admin->id ? 'selected' : '' }}>
+                                    {{ $admin->name }} ({{ $admin->email }})
+                                </option>
+                            @endforeach
+                        </select>
+                        @error('assigned_admin_id')
+                            <p class="mt-1.5 text-sm text-red-600 font-medium">{{ $message }}</p>
+                        @enderror
+                    </div>
                 </div>
                 @endif
 
-                <!-- Organizer Details -->
-                <div class="md:col-span-2 border-t pt-4 border-gray-200 mt-2">
-                    <h3 class="text-lg font-medium text-gray-900 mb-4">Organizer Details</h3>
+                <!-- Organizer & Media -->
+                <div class="border-t border-gray-100 pt-6">
+                    <h4 class="text-sm font-semibold text-gray-900 mb-4 uppercase tracking-wider">Organizer & Media</h4>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <x-ui.input id="organizer_name" name="organizer_name" :value="old('organizer_name')" label="Organizer Name" />
+                        </div>
+                        <div>
+                            <x-ui.input id="contact_number" name="contact_number" :value="old('contact_number')" label="Contact Number" />
+                        </div>
+                        <div class="md:col-span-2">
+                            <x-ui.input type="email" id="email" name="email" :value="old('email')" label="Support Email" />
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-1.5">Event Banner Image</label>
+                            <input name="banner_image" type="file" accept="image/*" class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100 transition-colors" />
+                            @error('banner_image') <p class="mt-1.5 text-sm text-red-600 font-medium">{{ $message }}</p> @enderror
+                        </div>
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-1.5">Agenda PDF</label>
+                            <input name="agenda_pdf" type="file" accept="application/pdf" class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100 transition-colors" />
+                            @error('agenda_pdf') <p class="mt-1.5 text-sm text-red-600 font-medium">{{ $message }}</p> @enderror
+                        </div>
+                    </div>
                 </div>
 
-                <div>
-                    <x-input-label for="organizer_name" value="Organizer Name" />
-                    <x-text-input id="organizer_name" name="organizer_name" type="text" class="mt-1 block w-full" :value="old('organizer_name')" />
-                    <x-input-error class="mt-2" :messages="$errors->get('organizer_name')" />
+                <div class="flex items-center gap-3 pt-4 border-t border-gray-100">
+                    <x-ui.button type="submit" variant="primary" x-bind:disabled="isSubmitting">
+                        <span x-show="!isSubmitting">Create Event</span>
+                        <span x-show="isSubmitting">Saving...</span>
+                    </x-ui.button>
+                    <x-ui.button href="{{ route('events.index') }}" variant="secondary">
+                        Cancel
+                    </x-ui.button>
                 </div>
-
-                <div>
-                    <x-input-label for="contact_number" value="Contact Number" />
-                    <x-text-input id="contact_number" name="contact_number" type="text" class="mt-1 block w-full" :value="old('contact_number')" />
-                    <x-input-error class="mt-2" :messages="$errors->get('contact_number')" />
-                </div>
-
-                <div>
-                    <x-input-label for="email" value="Support Email" />
-                    <x-text-input id="email" name="email" type="email" class="mt-1 block w-full" :value="old('email')" />
-                    <x-input-error class="mt-2" :messages="$errors->get('email')" />
-                </div>
-
-                <!-- Attachments -->
-                <div class="md:col-span-2 border-t pt-4 border-gray-200 mt-2">
-                    <h3 class="text-lg font-medium text-gray-900 mb-4">Media & Attachments</h3>
-                </div>
-
-                <div>
-                    <x-input-label for="banner_image" value="Event Banner Image" />
-                    <input id="banner_image" name="banner_image" type="file" accept="image/*" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 text-sm" />
-                    <x-input-error class="mt-2" :messages="$errors->get('banner_image')" />
-                </div>
-
-                <div>
-                    <x-input-label for="agenda_pdf" value="Agenda PDF" />
-                    <input id="agenda_pdf" name="agenda_pdf" type="file" accept="application/pdf" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 text-sm" />
-                    <x-input-error class="mt-2" :messages="$errors->get('agenda_pdf')" />
-                </div>
-
-            </div>
-
-            <div class="flex items-center gap-4 border-t border-gray-200 pt-6 mt-6">
-                <button type="submit" class="px-6 py-2 bg-indigo-600 text-white font-medium rounded-lg hover:bg-indigo-700 transition-colors shadow-sm">
-                    Create Event
-                </button>
-                <a href="{{ route('events.index') }}" class="text-gray-600 hover:text-gray-900">Cancel</a>
-            </div>
-        </form>
+            </x-ui.form>
+        </x-ui.card>
     </div>
 </x-app-layout>

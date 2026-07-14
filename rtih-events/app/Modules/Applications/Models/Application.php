@@ -17,6 +17,9 @@ class Application extends Model
     public function event() { return $this->belongsTo(Event::class); }
     public function form() { return $this->belongsTo(Form::class); }
     public function attendance() { return $this->hasOne(Attendance::class); }
+    
+    public function activities() { return $this->hasMany(ApplicationActivity::class)->latest(); }
+    public function assignee() { return $this->belongsTo(\App\Modules\Users\Models\User::class, 'assigned_to'); }
 
     /**
      * Scope a query to only include applications viewable by the given user.

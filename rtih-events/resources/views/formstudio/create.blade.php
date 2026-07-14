@@ -1,34 +1,42 @@
 <x-app-layout>
-    <div class="max-w-2xl mx-auto space-y-6 pt-10">
-        <div>
-            <h1 class="text-3xl font-bold tracking-tight text-neutral-900">Create New Form</h1>
-            <p class="text-sm text-neutral-500 mt-1">Start by giving your form a name and description.</p>
-        </div>
+    <x-slot name="header">
+        <h2 class="font-semibold text-xl text-gray-800 leading-tight tracking-tight">
+            {{ __('Create New Form') }}
+        </h2>
+    </x-slot>
 
-        <x-ui.layout.card padding="lg">
-            <form method="POST" action="{{ route('form-studio.store') }}" class="space-y-6">
-                @csrf
+    <div class="max-w-2xl mx-auto">
+        <x-ui.card>
+            <x-slot name="header">
+                <h3 class="text-lg font-bold text-gray-900 tracking-tight">Form Details</h3>
+            </x-slot>
+            
+            <x-ui.form method="POST" action="{{ route('form-studio.store') }}" class="space-y-6">
                 <div>
-                    <label for="name" class="block text-sm font-medium text-neutral-700">Form Name <span class="text-danger-500">*</span></label>
-                    <x-ui.forms.input type="text" name="name" id="name" required class="mt-1" placeholder="e.g. Mentor Application 2026" autofocus />
+                    <label for="name" class="block text-sm font-bold text-gray-700 mb-1.5">Form Name <span class="text-red-500">*</span></label>
+                    <input type="text" id="name" name="name" value="{{ old('name') }}" required autofocus class="block w-full rounded-xl border-gray-200 shadow-[0_1px_2px_rgba(0,0,0,0.02)] focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 sm:text-sm transition-all bg-white hover:border-gray-300 px-4 py-3" placeholder="e.g. Mentor Application 2026">
                     @error('name')
-                        <p class="mt-1 text-sm text-danger-600">{{ $message }}</p>
+                        <p class="mt-1.5 text-sm text-red-600 font-medium">{{ $message }}</p>
                     @enderror
                 </div>
 
                 <div>
-                    <label for="description" class="block text-sm font-medium text-neutral-700">Description</label>
-                    <textarea name="description" id="description" rows="3" class="mt-1 block w-full rounded-xl border-neutral-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 sm:text-sm transition-colors" placeholder="Briefly describe what this form is for..."></textarea>
+                    <label for="description" class="block text-sm font-bold text-gray-700 mb-1.5">Description</label>
+                    <textarea id="description" name="description" rows="3" class="block w-full rounded-xl border-gray-200 shadow-[0_1px_2px_rgba(0,0,0,0.02)] focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 sm:text-sm transition-all bg-white hover:border-gray-300 px-4 py-3" placeholder="Briefly describe what this form is for..."></textarea>
                     @error('description')
-                        <p class="mt-1 text-sm text-danger-600">{{ $message }}</p>
+                        <p class="mt-1.5 text-sm text-red-600 font-medium">{{ $message }}</p>
                     @enderror
                 </div>
 
-                <div class="flex items-center gap-3 pt-4 border-t border-neutral-100">
-                    <x-ui.buttons.button type="submit" variant="primary">Create & Open Builder</x-ui.buttons.button>
-                    <x-ui.buttons.button href="{{ route('form-studio.index') }}" variant="ghost">Cancel</x-ui.buttons.button>
+                <div class="flex items-center gap-3 pt-6 border-t border-gray-100">
+                    <x-ui.button type="submit" variant="primary" class="shadow-sm bg-indigo-600 hover:bg-indigo-700 focus:ring-indigo-500 border-indigo-600">
+                        <x-heroicon-o-sparkles class="w-4 h-4 mr-1.5"/> Create & Open Builder
+                    </x-ui.button>
+                    <x-ui.button href="{{ route('form-studio.index') }}" variant="secondary">
+                        Cancel
+                    </x-ui.button>
                 </div>
-            </form>
-        </x-ui.layout.card>
+            </x-ui.form>
+        </x-ui.card>
     </div>
 </x-app-layout>

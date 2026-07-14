@@ -1,57 +1,85 @@
 <x-app-layout>
     <x-slot name="header">
-        <div class="flex justify-between items-center">
-            <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-                {{ __('Form Preview') }}
-            </h2>
-            <a href="{{ route('forms.index') }}" class="text-blue-600 hover:underline">Back to Forms</a>
+        Form Preview
+    </x-slot>
+    <x-slot name="actions">
+        <div class="flex items-center gap-3">
+            <x-ui.button href="{{ route('forms.index') }}" variant="secondary">
+                <x-heroicon-o-arrow-left class="w-4 h-4 mr-2"/> Back
+            </x-ui.button>
+            <x-ui.button href="{{ route('forms.edit', $form) }}" variant="primary">
+                <x-heroicon-o-pencil class="w-4 h-4 mr-2"/> Edit Form
+            </x-ui.button>
         </div>
     </x-slot>
 
-    <div class="py-12">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-                <div class="p-6 text-gray-900">
-                    <div class="mb-6 border-b pb-4">
-                        <h3 class="text-2xl font-bold">{{ $form->title }}</h3>
-                        @if($form->description)
-                            <p class="text-gray-600 mt-2">{{ $form->description }}</p>
+    <div class="max-w-3xl mx-auto pb-12">
+        <div class="bg-white rounded-xl shadow-sm border border-gray-200/80 overflow-hidden relative mb-6">
+            <div class="h-3 w-full bg-indigo-600"></div>
+            <div class="p-8 border-b border-gray-100">
+                <h3 class="text-3xl font-bold text-gray-900 tracking-tight">{{ $form->title }}</h3>
+                @if($form->description)
+                    <p class="text-gray-600 mt-3 text-sm leading-relaxed">{{ $form->description }}</p>
+                @endif
+                <p class="text-xs text-red-500 font-medium mt-4">* Indicates required question</p>
+            </div>
+            
+            <div class="p-8 space-y-8 bg-gray-50/30">
+                @forelse($form->fields()->orderBy('sort_order')->get() as $field)
+                    <div class="bg-white p-6 border border-gray-200 rounded-xl shadow-sm">
+                        <label class="block text-base font-medium text-gray-900 mb-4">
+                            {{ $field->label }}
+                            @if($field->is_required)
+                                <span class="text-red-500 ml-1">*</span>
+                            @endif
+                        </label>
+                        
+                        <!-- Preview Render -->
+                        @if($field->field_type === 'text' || $field->field_type === 'email')
+                            <input type="text" class="block w-full sm:w-1/2 rounded-lg border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm text-gray-500 bg-gray-50" placeholder="Your answer" disabled>
+                        @elseif($field->field_type === 'textarea')
+                            <textarea class="block w-full rounded-lg border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm text-gray-500 bg-gray-50" rows="3" placeholder="Your answer" disabled></textarea>
+                        @elseif($field->field_type === 'file')
+                            <div class="flex items-center gap-2 text-indigo-600 bg-indigo-50 px-4 py-2 rounded-lg border border-indigo-100 w-max text-sm font-medium"><x-heroicon-o-cloud-arrow-up class="w-5 h-5"/> Upload File</div>
+                        @elseif($field->field_type === 'select')
+                            <select class="block w-full sm:w-1/2 rounded-lg border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm text-gray-500 bg-gray-50" disabled>
+                                <option>Choose</option>
+                                @if($field->options)
+                                    @foreach($field->options as $option)
+                                        <option>{{ $option }}</option>
+                                    @endforeach
+                                @endif
+                            </select>
+                        @elseif(in_array($field->field_type, ['checkbox', 'radio']) && $field->options)
+                            <div class="space-y-3">
+                                @foreach($field->options as $option)
+                                    <div class="flex items-center">
+                                        <input type="{{ $field->field_type }}" class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 {{ $field->field_type === 'radio' ? 'rounded-full' : 'rounded' }}" disabled>
+                                        <label class="ml-3 block text-sm font-medium text-gray-700">
+                                            {{ $option }}
+                                        </label>
+                                    </div>
+                                @endforeach
+                            </div>
                         @endif
                     </div>
-
-                    <div class="space-y-6">
-                        <h4 class="text-lg font-semibold text-gray-700">Fields Preview</h4>
-                        
-                        @forelse($form->fields()->orderBy('sort_order')->get() as $field)
-                            <div class="p-4 border rounded-md bg-gray-50">
-                                <label class="block font-medium text-gray-800">
-                                    {{ $field->label }}
-                                    @if($field->is_required)
-                                        <span class="text-red-500">*</span>
-                                    @endif
-                                </label>
-                                
-                                <div class="mt-2 text-sm text-gray-500">
-                                    Type: <span class="font-mono bg-gray-200 px-1 rounded">{{ $field->field_type }}</span>
-                                </div>
-                                
-                                @if(in_array($field->field_type, ['select', 'checkbox', 'radio']) && $field->options)
-                                    <div class="mt-2 text-sm">
-                                        <span class="text-gray-500">Options:</span>
-                                        <ul class="list-disc list-inside ml-2">
-                                            @foreach($field->options as $option)
-                                                <li>{{ $option }}</li>
-                                            @endforeach
-                                        </ul>
-                                    </div>
-                                @endif
-                            </div>
-                        @empty
-                            <p class="text-gray-500 italic">No fields have been added to this form yet.</p>
-                        @endforelse
+                @empty
+                    <div class="text-center py-12 bg-white rounded-xl border border-gray-200 border-dashed">
+                        <x-heroicon-o-document-minus class="mx-auto h-12 w-12 text-gray-300 mb-3"/>
+                        <p class="text-sm text-gray-500 font-medium">No fields have been added to this form yet.</p>
+                        <x-ui.button href="{{ route('forms.edit', $form) }}" variant="secondary" class="mt-4">
+                            Go to Builder
+                        </x-ui.button>
                     </div>
+                @endforelse
 
+                @if($form->fields()->count() > 0)
+                <div class="pt-4">
+                    <x-ui.button type="button" variant="primary" class="w-32" disabled>
+                        Submit
+                    </x-ui.button>
                 </div>
+                @endif
             </div>
         </div>
     </div>

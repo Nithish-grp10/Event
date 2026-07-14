@@ -3,74 +3,82 @@
         Events
     </x-slot>
     <x-slot name="actions">
-        <a href="{{ route('events.create') }}" class="inline-flex items-center gap-2 px-4 py-2 bg-indigo-600 text-white font-medium rounded-lg hover:bg-indigo-700 transition-colors shadow-sm">
-            <x-heroicon-o-plus class="w-5 h-5"/>
+        <x-ui.button href="{{ route('events.create') }}" variant="primary">
+            <x-heroicon-o-plus class="w-4 h-4 mr-2"/>
             New Event
-        </a>
+        </x-ui.button>
     </x-slot>
 
-    <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
-        @if($events->count() > 0)
-            <div class="overflow-x-auto">
-                <table class="w-full text-left border-collapse">
-                    <thead>
-                        <tr class="bg-gray-50 border-b border-gray-200 text-sm text-gray-500 uppercase tracking-wider">
-                            <th class="p-4 font-semibold">Title</th>
-                            <th class="p-4 font-semibold">Date</th>
-                            <th class="p-4 font-semibold">Status</th>
-                            <th class="p-4 font-semibold text-right">Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody class="divide-y divide-gray-200">
-                        @foreach($events as $event)
-                        <tr class="hover:bg-gray-50 transition-colors">
-                            <td class="p-4">
-                                <div class="font-medium text-gray-900">{{ $event->title }}</div>
-                                <div class="text-sm text-gray-500">{{ $event->slug }}</div>
-                            </td>
-                            <td class="p-4 text-gray-700">
-                                {{ \Carbon\Carbon::parse($event->start_date)->format('M d, Y') }}
-                            </td>
-                            <td class="p-4">
-                                @if($event->status === 'published')
-                                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
-                                        Published
-                                    </span>
-                                @else
-                                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
-                                        Draft
-                                    </span>
-                                @endif
-                            </td>
-                            <td class="p-4 text-right space-x-3">
-                                <a href="{{ route('events.show', $event) }}" class="text-indigo-600 hover:text-indigo-900 font-medium text-sm">View</a>
-                                @can('update', $event)
-                                <a href="{{ route('events.edit', $event) }}" class="text-gray-600 hover:text-gray-900 font-medium text-sm">Edit</a>
-                                @endcan
-                            </td>
-                        </tr>
-                        @endforeach
-                    </tbody>
-                </table>
-            </div>
+    @if($events->count() > 0)
+        <x-ui.data-table search="true" searchPlaceholder="Search events...">
+            <x-slot name="head">
+                <th scope="col" class="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Event Details</th>
+                <th scope="col" class="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Date</th>
+                <th scope="col" class="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Status</th>
+                <th scope="col" class="px-6 py-3 text-right text-xs font-semibold text-gray-500 uppercase tracking-wider">Actions</th>
+            </x-slot>
+
+            @foreach($events as $event)
+                <tr class="hover:bg-gray-50/50 transition-colors">
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        <div class="flex items-center">
+                            <div class="flex-shrink-0 h-10 w-10 bg-indigo-50 rounded-lg flex items-center justify-center text-indigo-600 border border-indigo-100">
+                                <x-heroicon-o-calendar class="w-5 h-5"/>
+                            </div>
+                            <div class="ml-4">
+                                <div class="text-sm font-semibold text-gray-900">{{ $event->title }}</div>
+                                <div class="text-xs text-gray-500 mt-0.5">{{ $event->slug }}</div>
+                            </div>
+                        </div>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        <div class="text-sm text-gray-900">{{ \Carbon\Carbon::parse($event->start_date)->format('M d, Y') }}</div>
+                        <div class="text-xs text-gray-500">{{ \Carbon\Carbon::parse($event->start_date)->format('g:i A') }}</div>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        @if($event->status === 'published')
+                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-emerald-50 text-emerald-700 border border-emerald-200">
+                                <span class="w-1.5 h-1.5 bg-emerald-500 rounded-full mr-1.5"></span>
+                                Published
+                            </span>
+                        @else
+                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-700 border border-gray-200">
+                                <span class="w-1.5 h-1.5 bg-gray-400 rounded-full mr-1.5"></span>
+                                Draft
+                            </span>
+                        @endif
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium space-x-2">
+                        <x-ui.button href="{{ route('events.show', $event) }}" variant="ghost" size="sm">
+                            View
+                        </x-ui.button>
+                        @can('update', $event)
+                        <x-ui.button href="{{ route('events.edit', $event) }}" variant="secondary" size="sm">
+                            Edit
+                        </x-ui.button>
+                        @endcan
+                    </td>
+                </tr>
+            @endforeach
+
             @if($events->hasPages())
-                <div class="p-4 border-t border-gray-200 bg-gray-50">
+                <x-slot name="pagination">
                     {{ $events->links() }}
-                </div>
+                </x-slot>
             @endif
-        @else
-            <!-- Empty State -->
-            <div class="p-12 text-center">
-                <div class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-gray-100 mb-4 text-gray-400">
-                    <x-heroicon-o-calendar class="w-8 h-8"/>
-                </div>
-                <h3 class="text-lg font-medium text-gray-900 mb-1">No events yet</h3>
-                <p class="text-gray-500 mb-6 max-w-sm mx-auto">Get started by creating your first event. You can manage dates, forms, and attendees all in one place.</p>
-                <a href="{{ route('events.create') }}" class="inline-flex items-center gap-2 px-4 py-2 bg-indigo-600 text-white font-medium rounded-lg hover:bg-indigo-700 transition-colors shadow-sm">
-                    <x-heroicon-o-plus class="w-5 h-5"/>
-                    Create First Event
-                </a>
+        </x-ui.data-table>
+    @else
+        <!-- Empty State -->
+        <x-ui.card class="flex flex-col items-center justify-center p-16 text-center">
+            <div class="w-16 h-16 bg-indigo-50 text-indigo-600 rounded-2xl flex items-center justify-center mb-4 shadow-sm border border-indigo-100">
+                <x-heroicon-o-calendar class="w-8 h-8"/>
             </div>
-        @endif
-    </div>
+            <h3 class="text-lg font-bold text-gray-900 mb-2">No events found</h3>
+            <p class="text-gray-500 mb-6 max-w-sm mx-auto text-sm">Get started by creating your first event. You can manage dates, forms, and attendees all in one place.</p>
+            <x-ui.button href="{{ route('events.create') }}" variant="primary">
+                <x-heroicon-o-plus class="w-4 h-4 mr-2"/>
+                Create First Event
+            </x-ui.button>
+        </x-ui.card>
+    @endif
 </x-app-layout>
