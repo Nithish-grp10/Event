@@ -64,6 +64,6 @@ class DashboardController extends Controller
             'data' => $appCounts->toArray(),
         ];
 
-        return view('dashboard', compact('stats', 'chartData'));
+        return view('dashboard.index', compact('stats', 'chartData'));
     }
 }

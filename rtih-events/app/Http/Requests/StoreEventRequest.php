@@ -2,7 +2,7 @@
 
 namespace App\Http\Requests;
 
-use App\Models\Event;
+use App\Modules\Events\Models\Event;
 use Illuminate\Foundation\Http\FormRequest;
 
 class StoreEventRequest extends FormRequest

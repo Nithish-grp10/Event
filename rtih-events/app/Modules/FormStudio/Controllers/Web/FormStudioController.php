@@ -11,12 +11,12 @@ class FormStudioController extends Controller
     public function index(Request $request)
     {
         $forms = Form::with('latestVersion')->latest()->paginate(15);
-        return view('form-studio.index', compact('forms'));
+        return view('formstudio.index', compact('forms'));
     }
 
     public function create()
     {
-        return view('form-studio.create');
+        return view('formstudio.create');
     }
 
     public function store(Request $request)
@@ -60,6 +60,6 @@ class FormStudioController extends Controller
         // Pass the schema to Alpine for the builder
         $schema = $version->schema ?? ['sections' => []];
 
-        return view('form-studio.builder', compact('form', 'version', 'schema'));
+        return view('formstudio.builder', compact('form', 'version', 'schema'));
     }
 }

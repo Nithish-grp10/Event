@@ -5,7 +5,7 @@ namespace Tests\Feature;
 use App\Models\Event;
 use App\Models\Form;
 use App\Models\FormField;
-use App\Models\User;
+use App\Modules\Users\Models\User;
 use App\Models\Application;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Str;

@@ -4,7 +4,7 @@ use App\Modules\Users\Controllers\Web\ProfileController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
-    return view('welcome');
+    return redirect()->route('dashboard');
 });
 
 Route::get('/dashboard', [App\Modules\Core\Controllers\Web\DashboardController::class, 'index'])

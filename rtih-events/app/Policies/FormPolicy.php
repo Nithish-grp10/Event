@@ -2,8 +2,8 @@
 
 namespace App\Policies;
 
-use App\Models\Form;
-use App\Models\User;
+use App\Modules\LegacyForms\Models\Form;
+use App\Modules\Users\Models\User;
 use Illuminate\Auth\Access\Response;
 
 class FormPolicy

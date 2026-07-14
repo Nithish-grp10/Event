@@ -2,7 +2,7 @@
 
 namespace App\Notifications;
 
-use App\Models\Feedback;
+use App\Modules\Feedback\Models\Feedback;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;

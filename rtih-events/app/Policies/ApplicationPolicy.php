@@ -2,8 +2,8 @@
 
 namespace App\Policies;
 
-use App\Models\Application;
-use App\Models\User;
+use App\Modules\Applications\Models\Application;
+use App\Modules\Users\Models\User;
 use Illuminate\Auth\Access\Response;
 
 class ApplicationPolicy
